@@ -11,6 +11,8 @@ if ( empty( $args ) ) {
 	return;
 }
 
+$button_class = 'button' . wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '';
+
 ?>
 <form id="customer-product-submit" method="post">
 	<?php wp_nonce_field( $args['action'] ); ?>
@@ -23,7 +25,7 @@ if ( empty( $args ) ) {
 		'product-name',
 		[
 			'label'    => __( 'Name', 'wpmpw' ),
-			'value'    => $args['product-title'] ?? null,
+			'default'  => $args['title'] ?? null,
 			'class'    => 'form-row',
 			'required' => true,
 		]
@@ -34,7 +36,7 @@ if ( empty( $args ) ) {
 		[
 			'label'    => __( 'Price', 'wpmpw' ),
 			'type'     => 'number',
-			'value'    => $args['product-price'] ?? null,
+			'default'  => $args['price'] ?? null,
 			'class'    => 'form-row form-row-first',
 			'required' => true,
 		]
@@ -45,7 +47,7 @@ if ( empty( $args ) ) {
 		[
 			'label'    => __( 'Quantity', 'wpmpw' ),
 			'type'     => 'number',
-			'value'    => $args['product-quantity'] ?? null,
+			'default'  => $args['quantity'] ?? null,
 			'class'    => 'form-row form-row-last',
 			'required' => true,
 		]
@@ -58,7 +60,7 @@ if ( empty( $args ) ) {
 		</label>
 		<?php
 		wp_editor(
-			$args['product-description'] ?? '',
+			$args['description'] ?? '',
 			'product-description',
 			[
 				'media_buttons'    => false,
@@ -68,8 +70,14 @@ if ( empty( $args ) ) {
 		);
 		?>
 	</p>
+	<p class="form-row">
+		<a class="<?php echo esc_attr( $button_class ); ?>">
+			<?php esc_html_e( 'Select Thumbnail', 'wpmpw' ); ?>
+		</a>
+	</p>
+	<br>
 	<p>
-		<button type="submit" class="button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" name="save_address" value="<?php esc_attr_e( 'Save address', 'woocommerce' ); ?>">
+		<button type="submit" class="<?php echo esc_attr( $button_class ); ?>" name="save_address" value="<?php esc_attr_e( 'Save address', 'woocommerce' ); ?>">
 			<?php echo esc_html( ( $args['is-edit'] ?? false ) ? __( 'Update Product', 'wpmpw' ) : __( 'Submit Product', 'wpmpw' ) ); ?>
 		</button>
 	</p>
