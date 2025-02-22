@@ -70,11 +70,14 @@ $button_class = 'button' . wc_wp_theme_get_element_class_name( 'button' ) ? ' ' 
 		);
 		?>
 	</p>
-	<p class="form-row">
-		<a class="<?php echo esc_attr( $button_class ); ?>">
-			<?php esc_html_e( 'Select Thumbnail', 'wpmpw' ); ?>
-		</a>
-	</p>
+	<?php if ( $args['can-upload-media'] ?? false ) : ?>
+		<p class="form-row">
+			<a class="<?php echo esc_attr( $button_class ); ?> wp-media-select-image" rel="thumbnail">
+				<?php esc_html_e( 'Select Thumbnail', 'wpmpw' ); ?>
+			</a>
+			<input type="hidden" name="thumbnail" id="thumbnail" value="<?php echo esc_attr( $args['thumbnail'] ?? '' ); ?>">
+		</p>
+	<?php endif; ?>
 	<br>
 	<p>
 		<button type="submit" class="<?php echo esc_attr( $button_class ); ?>" name="save_address" value="<?php esc_attr_e( 'Save address', 'woocommerce' ); ?>">

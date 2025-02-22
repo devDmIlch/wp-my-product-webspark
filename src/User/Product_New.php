@@ -139,6 +139,9 @@ class Product_New {
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
+		// Add a check whether the user is high enough level to allow them to upload media via wp.media.
+		$args['can-upload-media'] = current_user_can( 'upload_files' );
+
 		load_template( WPMPW_PLUGIN_TEMPLATES . 'user/product-new.php', true, $args );
 	}
 
@@ -173,18 +176,27 @@ class Product_New {
 			}
 		}
 
+		// Bail Is the required fields are not filled.
+		if ( ! isset( $_POST['product-name'], $_POST['product-quantity'], $_POST['product-price'] ) ) {
+			return;
+		}
+
 		// Create and populate new product.
 		$product_obj = new \WC_Product_Simple( $post_id );
-		$product_obj->set_name( sanitize_text_field( wp_unslash( $_POST['product-name'] ?? '0' ) ) );
+		$product_obj->set_name( sanitize_text_field( wp_unslash( $_POST['product-name'] ) ) );
 		$product_obj->set_status( 'pending' );
 		$product_obj->set_description( wp_kses_post( wp_unslash( $_POST['product-description'] ?? '' ) ) );
 
-		$product_price = sanitize_text_field( wp_unslash( $_POST['product-price'] ?? '0' ) );
+		if ( isset( $_POST['thumbnail'] ) ) {
+			$product_obj->set_image_id( sanitize_text_field( wp_unslash( $_POST['thumbnail'] ) ) );
+		}
+
+		$product_price = sanitize_text_field( wp_unslash( $_POST['product-price'] ) );
 		$product_obj->set_price( $product_price );
 		$product_obj->set_regular_price( $product_price );
 
 		try {
-			$product_obj->set_sku( sanitize_text_field( wp_unslash( $_POST['product-quantity'] ?? '0' ) ) );
+			$product_obj->set_sku( sanitize_text_field( wp_unslash( $_POST['product-quantity'] ) ) );
 		} catch ( \WC_Data_Exception $exception ) {
 			return;
 		}
@@ -203,6 +215,9 @@ class Product_New {
 		// Email the website administrator about submission.
 		$this->send_admin_product_submission_notification_email( $product_obj->get_id(), $user_id );
 	}
+
+
+	// Private Methods.
 
 	/**
 	 * Sends a notification about submitted product form to website admin.

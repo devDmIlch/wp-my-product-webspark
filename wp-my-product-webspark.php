@@ -67,6 +67,9 @@ if ( ! class_exists( 'WP_My_Product_Webspark' ) ) {
 
 			// Register custom plugin emails.
 			add_filter( 'woocommerce_email_classes', [ $this, 'initialize_plugin_emails' ] );
+
+			// Register script file.
+			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_script_files' ] );
 		}
 
 
@@ -102,6 +105,22 @@ if ( ! class_exists( 'WP_My_Product_Webspark' ) ) {
 			$emails['wc_customer_product_email']->init();
 
 			return $emails;
+		}
+
+		/**
+		 * Enqueues script file with gallery selector.
+		 */
+		public function enqueue_script_files(): void {
+			// Enqueue media script.
+			wp_enqueue_media();
+			// Enqueue JavaScript.
+			wp_enqueue_script(
+				'wpmpw_scripts',
+				plugins_url( '/js/index.js', WPMPW_PLUGIN_FILE ),
+				[ 'wp-i18n', 'media-upload' ],
+				'0.0.1',
+				true
+			);
 		}
 	}
 
