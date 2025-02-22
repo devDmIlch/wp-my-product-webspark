@@ -16,5 +16,5 @@ Installation process:
 ---------------------------------
 
 Missing features:
-Uploading thumbnails for all users via wp.media (currently works only for admins).
-Restrictions of selectable thumbnails by authorship.
+ - Uploading thumbnails for all users via wp.media (currently works only for admins).
+ - Restrictions of selectable thumbnails by authorship.
